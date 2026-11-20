@@ -84,11 +84,11 @@ var PAY_OPTS=[
 ];
 
 function fmt(n,d){if(n==null)return"—";return Number(n).toLocaleString("zh-CN",{minimumFractionDigits:d||2,maximumFractionDigits:d||2})}
-function fh(h,b,u,f,r){if(!b||!u||!f||!r)return null;return h.find(x=>x.building===b&&x.unit===u&&x.floor===f&&x.room===r)||null}
+function fh(h,b,u,f,r){if(!b||!u||f==null||f===""||!r)return null;var fn=Number(f);return h.find(x=>x.building===b&&x.unit===u&&Number(x.floor)===fn&&x.room===r)||null}
 function gb(h){return[...new Set(h.map(x=>x.building))].sort((a,b)=>parseInt(a)-parseInt(b))}
 function gu(h,b){return[...new Set(h.filter(x=>x.building===b).map(x=>x.unit))].sort((a,b)=>a.localeCompare(b))}
-function gf(h,b,u){return[...new Set(h.filter(x=>x.building===b&&x.unit===u).map(x=>x.floor))].sort((a,b)=>a-b)}
-function gr(h,b,u,f){return[...new Set(h.filter(x=>x.building===b&&x.unit===u&&x.floor===f).map(x=>x.room))].sort()}
+function gf(h,b,u){return[...new Set(h.filter(x=>x.building===b&&x.unit===u).map(x=>Number(x.floor)))].sort((a,b)=>a-b)}
+function gr(h,b,u,f){var fn=Number(f);return[...new Set(h.filter(x=>x.building===b&&x.unit===u&&Number(x.floor)===fn).map(x=>x.room))].sort()}
 
 function Watermark(){return e("div",{className:"wm"},...Array.from({length:60},(_,i)=>e("span",{key:i,style:{top:(i%5)*22+"%",left:(i%12)*9+"%"}},"北京房产壹姐团队")))}
 
@@ -255,7 +255,7 @@ function App(){
         if(us.length===1)n.unit=us[0];
       }
       if(field==="unit"){n.floor="";n.room=""}
-      if(field==="floor"){n.room=""}
+      if(field==="floor"){n.floor=Number(value);n.room=""}
       return n;
     });
   }
